@@ -1,0 +1,63 @@
+# Node modules
+node_modules/
+
+# Environment files (jangan commit credential)
+.env
+.env.*.local
+.env.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+*.log
+debug.log
+
+# Runtime / process files
+pids/
+*.pid
+*.pid.lock
+
+# Build / output
+dist/
+build/
+coverage/
+.nyc_output/
+
+# Bundler / cache
+.cache/
+.parcel-cache/
+.pnp/
+.pnp.js
+.turbo/
+.next/        # jika ada Next.js di monorepo
+
+# Editor / IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing / temp
+tmp/
+temp/
+reports/
+
+# Misc
+*.tgz
+*.zip
+
+# Docker / serverless / cloud (opsional)
+docker-compose.override.yml
+.serverless/
+.firebase/
+
+# Database / local files
+*.sqlite
+*.sqlite3
+uploads/
