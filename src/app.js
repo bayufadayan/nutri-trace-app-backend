@@ -7,6 +7,8 @@ import dotenv from "dotenv";
 import authRoutes from './routes/authRoutes.js';
 import batchRoutes from './routes/batchRoutes.js';
 import distributionRoutes from './routes/distributionRoutes.js';
+import nutritionRoutes from './routes/nutritionRoutes.js';
+import productRoutes from './routes/productRoutes.js';
 
 dotenv.config();
 
@@ -30,5 +32,7 @@ app.get("/", (req, res) => {
 app.use('/api', authRoutes);
 app.use('/api/batches', batchRoutes);
 app.use('/api/distributions', distributionRoutes);
+app.use('/api/nutritions', nutritionRoutes);
+app.use('/api/products', productRoutes);
 
 export default app;
