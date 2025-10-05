@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import authRoutes from './routes/authRoutes.js';
 import batchRoutes from './routes/batchRoutes.js';
+import distributionRoutes from './routes/distributionRoutes.js';
 
 dotenv.config();
 
@@ -28,5 +29,6 @@ app.get("/", (req, res) => {
 });
 app.use('/api', authRoutes);
 app.use('/api/batches', batchRoutes);
+app.use('/api/distributions', distributionRoutes);
 
 export default app;
