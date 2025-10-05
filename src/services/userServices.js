@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import pkg from '@prisma/client';
 import { generateAccessToken, generateRefreshToken } from '../utils/jwt.js';
 
-import { PrismaClient } from '../generated/prisma/index.js';
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export async function registerUser({ name, email, password, role }) {
