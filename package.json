@@ -25,7 +25,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.19.0",
     "morgan": "^1.10.1",
-    "permit": "^0.2.4"
+    "permit": "^0.2.4",
+    "qrcode": "^1.5.4"
   },
   "devDependencies": {
     "eslint": "^9.37.0",

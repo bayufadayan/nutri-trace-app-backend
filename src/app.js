@@ -5,6 +5,7 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import authRoutes from './routes/authRoutes.js';
+import batchRoutes from './routes/batchRoutes.js';
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(express.static('public'));
 
 // Route default buat tes
 app.get("/", (req, res) => {
@@ -25,5 +27,6 @@ app.get("/", (req, res) => {
     });
 });
 app.use('/api', authRoutes);
+app.use('/api/batches', batchRoutes);
 
 export default app;

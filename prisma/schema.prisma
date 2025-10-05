@@ -63,7 +63,7 @@ model Batch {
   materialName String
   weight       Float
   createdAt    DateTime    @default(now())
-  qrCode       String
+  qrCode       String?
   status       BatchStatus @default(PENDING)
 
   // Relasi
