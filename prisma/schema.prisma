@@ -13,108 +13,115 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 // =====================
 // ENUMS
 // =====================
 enum Role {
   SUPERADMIN
-  SUPPLIER
+  PRODUCER // sebelumnya SUPPLIER
   DISTRIBUTOR
   NUTRITIONIST
+}
+
+enum BatchStatus {
+  PENDING
+  DELIVERED
+  REJECTED
+}
+
+enum DistributionStatus {
+  IN_TRANSIT
+  DELIVERED
 }
 
 // =====================
 // MODELS
 // =====================
 
-// USER — semua akun yang terdaftar & punya peran resmi
+// USER — semua akun resmi
 model User {
-  id             Int     @id @default(autoincrement())
-  name           String
-  email          String  @unique
-  password       String
-  role           Role
-  profileImage   String?
-  createdAt      DateTime @default(now())
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  password     String
+  role         Role
+  profileImage String?
+  createdAt    DateTime @default(now())
+  refreshToken String?
 
-  refreshToken   String?   // <- tambahkan ini
-  products       Product[] @relation("SupplierProducts")
-  shipments      SupplyChainLog[] @relation("UserShipments")
+  // Relasi
+  batches        Batch[]              @relation("ProducerBatches")
+  products       Product[]
+  distributions  Distribution[]
   aiExplanations AIAgentExplanation[]
 }
 
-// PRODUCT — representasi produk mentah maupun hasil akhir
+// BATCH — bahan mentah yang diinput produsen
+model Batch {
+  id           String      @id @default(uuid())
+  producerId   String
+  materialName String
+  weight       Float
+  createdAt    DateTime    @default(now())
+  qrCode       String
+  status       BatchStatus @default(PENDING)
+
+  // Relasi
+  producer      User           @relation("ProducerBatches", fields: [producerId], references: [id])
+  distributions Distribution[]
+  products      Product[]
+}
+
+// DISTRIBUTION — pengiriman batch
+model Distribution {
+  id           String             @id @default(uuid())
+  batchId      String
+  driverName   String
+  truckId      String
+  fromLocation String
+  toLocation   String
+  sentAt       DateTime
+  receivedAt   DateTime?
+  status       DistributionStatus @default(IN_TRANSIT)
+
+  batch  Batch   @relation(fields: [batchId], references: [id])
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+}
+
+// PRODUCT — makanan akhir yang dibuat nutritionist
 model Product {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
+  batchId     String
   name        String
-  description String?
-  imageUrl    String?
-  supplierId  Int
-  supplier    User     @relation("SupplierProducts", fields: [supplierId], references: [id])
+  nutritionId String?  @unique   // <- harus unique
+  qrCode      String
   createdAt   DateTime @default(now())
 
-  // Relations
-  batches        Batch[]
-  certifications Certification[]
-  nutrition      Nutrition?
+  batch          Batch                @relation(fields: [batchId], references: [id])
+  nutrition      Nutrition?           @relation(fields: [nutritionId], references: [id])
   aiExplanations AIAgentExplanation[]
+  userId         String?
+  user           User?                @relation(fields: [userId], references: [id])
 }
 
-model Batch {
-  id        Int      @id @default(autoincrement())
-  traceCode String   @unique
-  productId Int
-  product   Product  @relation(fields: [productId], references: [id])
-  createdAt DateTime @default(now())
-  imageUrl  String?
-  // Relasi ke log pengiriman
-  logs SupplyChainLog[]
-}
-
-// SUPPLY CHAIN LOG — mencatat perjalanan batch dari supplier ke lokasi akhir
-model SupplyChainLog {
-  id        Int      @id @default(autoincrement())
-  batchId   Int
-  userId    Int
-  action    String
-  timestamp DateTime @default(now())
-  location  String?
-  imageUrl  String? // foto bukti pengiriman (misal foto truk, tanda terima, lokasi drop-off)
-
-  batch Batch @relation(fields: [batchId], references: [id])
-  user  User  @relation("UserShipments", fields: [userId], references: [id])
-}
-
-// NUTRITION — data gizi produk akhir
+// NUTRITION — data gizi makanan akhir
 model Nutrition {
-  id        Int     @id @default(autoincrement())
-  productId Int     @unique
-  calories  Float
-  protein   Float
-  fat       Float
-  carbs     Float
-  vitamins  String?
+  id       String  @id @default(uuid())
+  calories Float
+  protein  Float
+  fat      Float
+  carbs    Float
+  vitamins String?
 
-  product Product @relation(fields: [productId], references: [id])
+  product Product?
 }
 
-// CERTIFICATION — bukti keamanan atau mutu produk
-model Certification {
-  id         Int      @id @default(autoincrement())
-  productId  Int
-  certType   String
-  issuedBy   String
-  issuedDate DateTime
-
-  product Product @relation(fields: [productId], references: [id])
-}
-
-// AI AGENT EXPLANATION — hasil generate dari AI (IBM Granite)
+// AI AGENT EXPLANATION — hasil generate AI
 model AIAgentExplanation {
-  id            Int      @id @default(autoincrement())
-  userId        Int
-  productId     Int
+  id            String   @id @default(uuid())
+  userId        String
+  productId     String
   generatedText String
   createdAt     DateTime @default(now())
 

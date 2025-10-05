@@ -1,10 +1,10 @@
-// src/app.js
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import authRoutes from './routes/authRoutes.js';
 
 dotenv.config();
 
@@ -24,5 +24,6 @@ app.get("/", (req, res) => {
         message: "Backend is running successfully 🚀",
     });
 });
+app.use('/api', authRoutes);
 
 export default app;
