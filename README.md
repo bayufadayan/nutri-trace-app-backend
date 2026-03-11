@@ -2,7 +2,7 @@
 
 Backend service untuk **NutriTrace**, platform pelacakan rantai pasok pangan yang menghadirkan transparansi dari asal bahan hingga distribusi akhir ke konsumen. Dibangun menggunakan **Express.js** + **Prisma** dengan PostgreSQL.
 
-🔗 **Live Backend:** https://nutri-trace-backend.bayufadayan.my.id/  
+🔗 **Live Backend:** -
 🔗 **Frontend Repository:** https://github.com/bayufadayan/nutri-trace-app-frontend  
 🔗 **Backend Repository:** https://github.com/bayufadayan/nutri-trace-app-backend
 
